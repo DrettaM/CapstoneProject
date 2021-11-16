@@ -1,8 +1,13 @@
 # Sales_Analytics
 
-## **How to use the database:**
+##**Description:**
+###The Sales Analytics database is designed to import flat file sales data and query that data.
+###The queries identify top customers in terms of money spent and frequency of purchase as well as
+###the most popular products. 
 
-1. 
+## **Getting Started:**
+
+1. Execute the *OnlineShopCreateDB.sql
 
 
 ## **Features Included:**
