@@ -6,8 +6,13 @@
 
 ## **Getting Started:**
 
-1. Execute the *OnlineShopCreateDB.sql code*
-2. Execute the *OnlineShopImportData.sql code*
+* MS SQL Server is required along with either MSSQL Server Management Studio or Azure Data Studio
+1. Download the zip file of the Sales_Analytics repository from GitHub.
+2. Extract the zip file to a temp folder *(or the folder of your choice).*
+3. Launch MSSQL Server Management Studio or Azure Data Studio.
+4. Open the *.sql files in SMS (or Azure). 
+5. Execute the *OnlineShopCreateDB.sql code* first.
+6. Next, execute the *OnlineShopImportData.sql code*
 
 ## **Project Requirements Included:**
 
