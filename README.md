@@ -6,7 +6,7 @@
 
 ## **Getting Started:**
 
-* MS SQL Server is required along with either MSSQL Server Management Studio or Azure Data Studio
+### MS SQL Server is required along with either MSSQL Server Management Studio or Azure Data Studio
 1. Download the zip file of the Sales_Analytics repository from GitHub.
 2. Extract the zip file to a temp folder *(or the folder of your choice).*
 3. Launch MSSQL Server Management Studio or Azure Data Studio.
