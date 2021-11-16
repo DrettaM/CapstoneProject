@@ -1,7 +1,7 @@
 /* SalesAnalytics.sql
  * Author: Mildretta Martin
  * Date Created: 10/29/2021
- * Description: Analyzing online shop's database
+ * Description: Sales analytics for Online Shop
  *
  * Tables: 
 			Customer (CustID, Name, Email, Address1, Address2, City, State, PostalCode, Country, Phone) 
@@ -65,3 +65,7 @@ CREATE TABLE Orders (
     ShipPostalCode int,
     ShipCountry nvarchar(30)
     );
+
+/*____________________________________________________________________________
+												  STORED PROCEDURES
+______________________________________________________________________________*/
