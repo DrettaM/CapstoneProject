@@ -6,7 +6,7 @@
  * Tables: 
 			Customer (CustID, Name, Email, Address1, Address2, City, State, PostalCode, Country, Phone) 
 			Items (ItemSKU, Category, ItemDesc, PricePerUnit, ItemStatus)
-			Orders (
+			Orders (OrderID, CustID, ItemSKU, ItemsQty, OrderAmt, OrderDate, ShipDate, ShipVia, ShipCost, ShipName, ShipAddr1, ShipAddr2, ShipCity, ShipState, ShipPostalCode, ShipCountry)
  *
  * Stored Procedures:
  *    
@@ -51,7 +51,7 @@ CREATE TABLE Orders (
     OrderID int PRIMARY KEY,
     CustID int FOREIGN KEY(CustID) REFERENCES Customer(CustID) ,
     ItemSKU int FOREIGN KEY(ItemSKU) REFERENCES Items(ItemSKU),
-    ItemsQuanity int,
+    ItemsQty int,
     OrderAmt smallmoney,
     OrderDate datetime,
     ShipDate datetime,
