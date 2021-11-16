@@ -1,4 +1,24 @@
+/* SalesAnalytics.sql
+ * Author: Mildretta Martin
+ * Date Created: 10/29/2021
+ * Description: Analyzing online shop's database
+ *
+ * Tables: 
+			Customer (CustID, Name, Email, Address1, Address2, City, State, PostalCode, Country, Phone) 
+			Items (ItemSKU, Category, ItemDesc, PricePerUnit, ItemStatus)
+			Orders (
+ *
+ * Stored Procedures:
+ *    
+*/
+
+--***DROP & CREATE****
+--CREATE DATABASE OnlineShop;
+
 USE OnlineShop
+
+DROP TABLE IF EXISTS Orders;
+GO
 
 DROP TABLE IF EXISTS Customer;
 GO
@@ -6,11 +26,8 @@ GO
 DROP TABLE IF EXISTS Items;
 GO
 
-DROP TABLE IF EXISTS Orders;
-GO
-
 CREATE TABLE Customer (
-    CustID int primary key,
+    CustID int PRIMARY KEY,
 	Name nvarchar(30),
 	Email nvarchar(50),
 	Address1 nvarchar(255),
@@ -23,7 +40,7 @@ CREATE TABLE Customer (
     );
 
 CREATE TABLE Items (
-    ItemSKU int primary key,
+    ItemSKU int PRIMARY KEY,
     Category nvarchar(50),
     ItemDesc nvarchar(255),
     PricePerUnit smallmoney,
@@ -31,9 +48,9 @@ CREATE TABLE Items (
     );
 
 CREATE TABLE Orders (
-    OrderID int primary key,
-    CustID nchar(10),
-    ItemSKU int,
+    OrderID int PRIMARY KEY,
+    CustID int FOREIGN KEY(CustID) REFERENCES Customer(CustID) ,
+    ItemSKU int FOREIGN KEY(ItemSKU) REFERENCES Items(ItemSKU),
     ItemsQuanity int,
     OrderAmt smallmoney,
     OrderDate datetime,
@@ -45,6 +62,6 @@ CREATE TABLE Orders (
     ShipAddr2 nvarchar(255),
     ShipCity nvarchar(30),
     ShipState nvarchar(2),
-    ShipPostalCode int(10),
+    ShipPostalCode int,
     ShipCountry nvarchar(30)
     );
