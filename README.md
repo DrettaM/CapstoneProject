@@ -2,14 +2,12 @@
 
 ## **Description:**
 
-#### The Sales Analytics database is designed to import flat file sales data and query that data.The queries identify top customers in terms of money spent and frequency of purchase as well as the most popular products. 
+#### The Sales Analytics database is designed to import flat file sales data and query that data. The queries identify top customers in terms of money spent and frequency of purchase as well as the most popular products. 
 
 ## **Getting Started:**
 
 1. Execute the *OnlineShopCreateDB.sql code*
 2. Execute the *OnlineShopImportData.sql code*
-
-
 
 ## **Project Requirements Included:**
 
