@@ -13,12 +13,32 @@
 */
 
 /*************************************************************************
-*************************   DROP & CREATE   ******************************
+*************************   DROP & CREATE DB  ***************************
 **************************************************************************/
 
---CREATE DATABASE OnlineShop;
+USE Master;
+GO
 
-USE OnlineShop
+IF DATABASEPROPERTYEX ('OnlineShop','Version') IS NOT NULL
+BEGIN
+	ALTER DATABASE OnlineShop SET SINGLE_USER
+	WITH ROLLBACK IMMEDIATE;
+	DROP DATABASE OnlineShop;
+END
+GO
+
+CREATE DATABASE OnlineShop;
+GO
+
+USE OnlineShop;
+GO
+
+--CREATE SCHEMA Transactions;
+--GO
+
+/*************************************************************************
+***********************   DROP & CREATE TABLES  **************************
+**************************************************************************/
 
 DROP TABLE IF EXISTS Orders;
 GO
@@ -72,3 +92,4 @@ CREATE TABLE Orders (
 /*************************************************************************
 *********************** STORED PROCEDURES ********************************
 **************************************************************************/
+
