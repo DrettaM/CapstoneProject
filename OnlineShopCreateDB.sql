@@ -13,7 +13,7 @@
 			1. ImportData - Imports data from csv files into tables
 			2. CreateSalesReport - Displays by inventory category, the number of items sold and to whom
 			3. CreateRevenueReport - Displays sales totals by month and year
-			4. PopularItems - Displays items that have more than 200 units purchased
+			4. PopularItems - Displays items that have more than 500 units purchased
 		
  *    
 */
@@ -39,7 +39,7 @@ GO
 USE OnlineShop;
 GO
 
-CREATE SCHEMA Transactions;
+CREATE SCHEMA Sales;
 GO
 
 /*************************************************************************
@@ -55,7 +55,7 @@ GO
 DROP TABLE IF EXISTS Items;
 GO
 
-CREATE TABLE Customer (
+CREATE TABLE Sales.Customer (
     CustID int PRIMARY KEY,
 	CompanyName varchar(35) NULL,
 	FirstName varchar(35) NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE Customer (
 	DateCreated datetime NOT NULL DEFAULT GETDATE()
     );
 
-CREATE TABLE Inventory (
+CREATE TABLE Sales.Inventory (
     ItemSKU nvarchar(25) PRIMARY KEY,
     Category varchar(50),
     ItemDesc varchar(255),
@@ -80,12 +80,12 @@ CREATE TABLE Inventory (
 	PricePerUnit smallmoney
 	);
 
-CREATE TABLE Orders (
+CREATE TABLE Sales.Orders (
     OrderID int PRIMARY KEY,
-    CustID int FOREIGN KEY(CustID) REFERENCES Customer(CustID) ,
-    ItemSKU nvarchar(25) FOREIGN KEY(ItemSKU) REFERENCES Inventory(ItemSKU),
+    CustID int FOREIGN KEY(CustID) REFERENCES Sales.Customer(CustID) ,
+    ItemSKU nvarchar(25) FOREIGN KEY(ItemSKU) REFERENCES Sales.Inventory(ItemSKU),
     Item1Qty int,
-	Item2SKU nvarchar(25) FOREIGN KEY(Item2SKU) REFERENCES Inventory(ItemSKU),
+	Item2SKU nvarchar(25) FOREIGN KEY(Item2SKU) REFERENCES Sales.Inventory(ItemSKU),
     TotQty int,
 	OrderAmt smallmoney,
     OrderDate datetime NOT NULL DEFAULT GETDATE(),
@@ -95,6 +95,12 @@ CREATE TABLE Orders (
 *********************** STORED PROCEDURES ********************************
 **************************************************************************/
 
+
+/*CREATE OR ALTER PROCEDURE ImportData
+AS
+
+BULK INSERT Sales.Customers FROM 'C:\Data\Temp\SalesAnalytics\Customers.csv';
+GO */
 
 /*CREATE OR ALTER PROCEDURE CreateSalesReport
 @Category varchar(255)
