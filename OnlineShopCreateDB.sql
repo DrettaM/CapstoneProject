@@ -39,8 +39,8 @@ GO
 USE OnlineShop;
 GO
 
---CREATE SCHEMA Transactions;
---GO
+CREATE SCHEMA Transactions;
+GO
 
 /*************************************************************************
 ***********************   DROP & CREATE TABLES  **************************
