@@ -21,7 +21,7 @@
 	- *Write a SELECT query that utilizes an ORDER BY clause.* 
 
 * Group 2: Updating / Deleting Data from a Database
-	- *Write a DML statement that DELETEs a set of rows with a WHERE clause. The
+	- *Write a DML statement that UPDATES a set of rows with a WHERE clause. The
 values used in the WHERE clause should be a variable.*
 
 * Group 3: Optimizing a Database
@@ -30,6 +30,5 @@ performance of one of the above queries.*
 
  
 ## **Future Features:**
-
 #### - *Add a PowerBI interface.*
 
