@@ -18,6 +18,8 @@ EXECUTE AddCategory @CategoryID = '5', @Description = 'GHOSTS';
 SELECT * FROM ItemCategory;
 GO
 
+
+
 --Delete the line that you just added from the ItemCategory
 EXECUTE DeleteCategory @CategoryID = '5', @Description = 'GHOSTS';
 GO
@@ -25,7 +27,8 @@ GO
 SELECT * FROM ItemCategory;
 GO
 
-
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 
 /*Query Customers by state using any of the following: Alaska (AK), Louisiana (LA), Michigan (MI), New Jersey (NJ), Ohio (OH), Illinois (IL),
 California (CA), South Dakota (SD), or Maryland (MD)*/
@@ -34,3 +37,13 @@ GO
 
 SELECT State_Province FROM Customers;
 GO
+
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+
+EXECUTE SalesByCategory;
+GO
+
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+
