@@ -139,7 +139,7 @@ END
 GO
 
 ---------------------------------------------------------------------------------------------------
-
+--a DML statement that UPDATES a set of rows with a WHERE clause. The values used in the WHERE clause should be a variable
 CREATE OR ALTER PROCEDURE DeleteCategory
 	@CategoryID int,
 	@Description varchar (35)

@@ -5,7 +5,7 @@
 -- Description: Sales analytics for Online Shop
 
 /*************************************************************************
-*********************** Queries & Sample Commands  *************************
+*********************** Queries & Sample Statements *************************
 **************************************************************************/
 
 USE OnlineShop
@@ -17,8 +17,6 @@ EXECUTE AddCategory @CategoryID = '5', @Description = 'GHOSTS';
 --View your new addition
 SELECT * FROM ItemCategory;
 GO
-
-
 
 --Delete the line that you just added from the ItemCategory
 EXECUTE DeleteCategory @CategoryID = '5', @Description = 'GHOSTS';
