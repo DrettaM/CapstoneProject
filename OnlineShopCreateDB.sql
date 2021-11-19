@@ -39,11 +39,6 @@ GO
 USE OnlineShop;
 GO
 
-DROP SCHEMA IF EXISTS Sales;
-GO
-
-CREATE SCHEMA Sales;
-GO
 
 /*************************************************************************
 ***********************   DROP & CREATE TABLES  **************************
@@ -70,12 +65,12 @@ CREATE TABLE Customer (
 	State_Province varchar(2),
 	PostalCode int ,
 	Country varchar(30),
-	Phone int,
-	DateCreated datetime NOT NULL DEFAULT GETDATE()
+	Phone varchar(15),
+	DateCreated datetime2
     );
 
 CREATE TABLE Inventory (
-    ItemSKU nvarchar(25) PRIMARY KEY,
+    ItemSKU int PRIMARY KEY,
     Category varchar(50),
     ItemDesc varchar(255),
     OnHand int,
@@ -84,14 +79,15 @@ CREATE TABLE Inventory (
 	);
 
 CREATE TABLE Orders (
-    OrderID int PRIMARY KEY,
+    OrderID int PRIMARY KEY NOT NULL,
     CustID int FOREIGN KEY(CustID) REFERENCES Customer(CustID) ,
-    ItemSKU nvarchar(25) FOREIGN KEY(ItemSKU) REFERENCES Inventory(ItemSKU),
+    ItemSKU int FOREIGN KEY(ItemSKU) REFERENCES Inventory(ItemSKU),
     Item1Qty int,
-	Item2SKU nvarchar(25) FOREIGN KEY(Item2SKU) REFERENCES Inventory(ItemSKU),
-    TotQty int,
-	OrderAmt smallmoney,
-    OrderDate datetime NOT NULL DEFAULT GETDATE(),
+	Item2SKU int NULL FOREIGN KEY(Item2SKU) REFERENCES Inventory(ItemSKU),
+    Item2Qty int,
+	TotQty int,
+	OrderAmt smallmoney NULL,
+    OrderDate datetime2 NOT NULL,
     );
 
 /*************************************************************************
@@ -115,19 +111,19 @@ GO
 --CREATE OR ALTER PROCEDURE ImportData
 --AS
 
-BULK INSERT Customer 
-FROM 'C:\Data\Temp\SalesAnalytics\Customers.csv' 
-WITH ( FIRSTROW = 2, FIELDTERMINATOR = ',', ROWTERMINATOR = '\n', TABLOCK );
+--BULK INSERT Customer 
+--FROM 'C:\Data\Temp\SalesAnalytics\Customers.csv' 
+--WITH ( FIRSTROW = 2, FIELDTERMINATOR = ',', ROWTERMINATOR = '\n', TABLOCK );
 
-BULK INSERT Inventory 
-FROM 'C:\Data\Temp\SalesAnalytics\Inventory.csv' 
-WITH ( FIRSTROW = 2, FIELDTERMINATOR = ',', ROWTERMINATOR = '\n', TABLOCK );
+--BULK INSERT Inventory 
+--FROM 'C:\Data\Temp\SalesAnalytics\Inventory.csv' 
+--WITH ( FIRSTROW = 2, FIELDTERMINATOR = ',', ROWTERMINATOR = '\n', TABLOCK );
 
-BULK INSERT Orders 
-FROM 'C:\Data\Temp\SalesAnalytics\Orders.csv' 
-WITH ( FIRSTROW = 2, FIELDTERMINATOR = ',', ROWTERMINATOR = '\n', TABLOCK );
+--BULK INSERT Orders 
+--FROM 'C:\Data\Temp\SalesAnalytics\Orders.csv' 
+--WITH ( FIRSTROW = 2, FIELDTERMINATOR = ',', ROWTERMINATOR = '\n', TABLOCK );
 
-GO
+--GO
 
 /*CREATE OR ALTER PROCEDURE CreateSalesReport
 @Category varchar(255)
