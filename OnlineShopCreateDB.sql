@@ -138,6 +138,8 @@ BEGIN
 END
 GO
 
+---------------------------------------------------------------------------------------------------
+
 CREATE OR ALTER PROCEDURE DeleteCategory
 	@CategoryID int,
 	@Description varchar (35)
@@ -147,6 +149,8 @@ BEGIN
 	WHERE CategoryID = @CategoryID
 END
 GO
+
+---------------------------------------------------------------------------------------------------
 
 CREATE OR ALTER PROCEDURE TopCustomer
 @State_Province varchar(2)
@@ -159,6 +163,8 @@ LEFT JOIN Customers c ON c.CustID = li.CustID
 WHERE c.State_Province = @State_Province
 GROUP BY c.CustID, c.LastName, c.FirstName, c.State_Province;
 GO
+
+---------------------------------------------------------------------------------------------------
 
 CREATE OR ALTER PROCEDURE SalesbyCategory
 
