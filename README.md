@@ -12,7 +12,8 @@
 3. Launch MSSQL Server Management Studio or Azure Data Studio.
 4. Open the *.sql files in SMS (or Azure). 
 5. Execute the *OnlineShopCreateDB.sql code* first.
-6. Next, execute the *OnlineShopImportData.sql code*
+6. Next, execute the *OnlineShopImportData.sql code*.
+7. Finally, execute the statements on the *OnlineShopSampleCommands.sql code*.
 
 ## **Project Requirements Included:**
 
@@ -28,7 +29,4 @@ values used in the WHERE clause should be a variable.*
 	- *Design a NONCLUSTERED INDEX with ONE KEY COLUMN that improves the
 performance of one of the above queries.*
 
- 
-## **Future Features:**
-#### - *Add a PowerBI interface.*
 
