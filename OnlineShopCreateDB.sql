@@ -11,8 +11,9 @@
  *			Orders (OrderID, CustID, Item1, Item1Qty, Item2, Item2Qty, TotQty, OrderAmt, OrderDate)
  *
  * Stored Procedures:
-			1. ImportData - Imports data from csv files into tables
-			2. CreateSalesReport - Displays by inventory category, the number of items sold and to whom
+			1. AddCategory: @CategoryID, @Description
+			2. TopCustomer: @State_Province
+			3. - Displays by inventory category, the number of items sold and to whom
 			3. CreateRevenueReport - Displays sales totals by month and year
 			4. PopularItems - Displays items that have more than 500 units purchased
 		
@@ -46,6 +47,9 @@ GO
 **************************************************************************/
 
 DROP TABLE IF EXISTS Orders;
+GO
+
+DROP TABLE IF EXISTS LineItems;
 GO
 
 DROP TABLE IF EXISTS Customers;
@@ -87,14 +91,24 @@ CREATE TABLE Inventory (
 	PricePerUnit smallmoney
 	);
 
+CREATE TABLE LineItems(
+	LineID varchar(10) PRIMARY KEY NOT NULL,
+	OrderID int, 
+	CustID varchar(4) FOREIGN KEY(CustID) REFERENCES Customers(CustID),
+	ItemSKU int FOREIGN KEY(ItemSKU) REFERENCES Inventory(ItemSKU),
+	Quantity int,
+	OrderDate datetime2 NOT NULL
+	);
+
 CREATE TABLE Orders (
     OrderID int PRIMARY KEY NOT NULL,
     Customer varchar(4) FOREIGN KEY(Customer) REFERENCES Customers(CustID) ,
-    Item1 int FOREIGN KEY(Item1) REFERENCES Inventory(ItemSKU),
-    Item1Qty int,
-	Item2 int NULL,
-	Item2Qty int,
-	TotQty int,
+	Item varchar(10) FOREIGN KEY(Item) REFERENCES LineItems(LineID),
+    --Item1 int FOREIGN KEY(Item1) REFERENCES Inventory(ItemSKU),
+    --Item1Qty int,
+	--Item2 int NULL,
+	--Item2Qty int,
+	--TotQty int,
 	OrderAmt smallmoney NULL,
     OrderDate datetime2 NOT NULL
     );
@@ -117,32 +131,38 @@ GO
 **************************************************************************/
 
 
---CREATE OR ALTER PROCEDURE ImportData
---AS
-
---BULK INSERT Customer 
---FROM 'C:\Data\Temp\SalesAnalytics\Customers.csv' 
---WITH ( FIRSTROW = 2, FIELDTERMINATOR = ',', ROWTERMINATOR = '\n', TABLOCK );
-
---BULK INSERT Inventory 
---FROM 'C:\Data\Temp\SalesAnalytics\Inventory.csv' 
---WITH ( FIRSTROW = 2, FIELDTERMINATOR = ',', ROWTERMINATOR = '\n', TABLOCK );
-
---BULK INSERT Orders 
---FROM 'C:\Data\Temp\SalesAnalytics\Orders.csv' 
---WITH ( FIRSTROW = 2, FIELDTERMINATOR = ',', ROWTERMINATOR = '\n', TABLOCK );
-
---GO
-
-/*CREATE OR ALTER PROCEDURE CreateSalesReport
-@Category varchar(255)
+CREATE OR ALTER PROCEDURE AddCategory
+	@CategoryID int,
+	@Description date
 AS
-SELECT SUM(so.SalesAmount) AS 'SalesAmount'
-	   ,spl.LevelName AS 'Level'
-	   ,CONCAT(sp.LastName,', ',sp.FirstName) AS 'FullName' 
-FROM Sales.SalesPerson sp
-LEFT OUTER JOIN Sales.SalesOrder so ON so.SalesPerson = sp.Id
-LEFT OUTER JOIN Sales.SalesPersonLevel spl ON spl.Id = sp.LevelId
-WHERE spl.LevelName = @LevelName
+BEGIN
+	INSERT INTO [ItemCategory] ([CategoryID], [Description])
+		VALUES (@CategoryID, @Description)
+END
+GO
+
+CREATE OR ALTER PROCEDURE TopCustomer
+@State_Province varchar(2)
+AS
+SELECT customer, sum(o.TotQty) AS 'TotalQuantity',
+	UPPER(c.State_Province) AS 'Location',
+	CONCAT(c.LastName, ',',  c.FirstName) AS 'FullName' 
+FROM Orders o 
+LEFT JOIN Customers c ON c.CustID = o.Customer
+WHERE c.State_Province = @State_Province
+GROUP BY o.Customer, c.LastName, c.FirstName, c.State_Province;
+GO
+
+/*--CREATE OR ALTER PROCEDURE SalesbyCategory
+--@Category varchar(255)
+--AS
+SELECT sum(o.totqty) AS 'TotalQuantity', 
+	ic.Description AS 'Category',
+	CONCAT(c.LastName,', ', c.FirstName) AS 'FullName' 
+FROM Orders o
+LEFT JOIN Inventory i ON i.ItemSKU = o.Item1
+--LEFT JOIN Customer c ON c.CustID = o.Customer
+--LEFT JOIN ItemCategory ic ON ic. = sp.LevelId
+WHERE ic.Description = @Category
 GROUP BY spl.LevelName, sp.LastName, sp.FirstName;
 GO */
