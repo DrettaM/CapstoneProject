@@ -10,12 +10,11 @@
  *			ItemCategory (CategoryID, Description)
  *			Orders (OrderID, CustID, Item1, Item1Qty, Item2, Item2Qty, TotQty, OrderAmt, OrderDate)
  *
- * Stored Procedures:
+ * SProcs:
 			1. AddCategory: @CategoryID, @Description
-			2. TopCustomer: @State_Province
-			3. - Displays by inventory category, the number of items sold and to whom
-			3. CreateRevenueReport - Displays sales totals by month and year
-			4. PopularItems - Displays items that have more than 500 units purchased
+			2. DeleteCategory: @CategoryID, @Description
+			3. TopCustomer: @State_Province
+			4. SalesByReport: Displays by inventory category, the number of items sold and to whom
 		
  *    
 */
@@ -46,6 +45,9 @@ GO
 ***********************   DROP & CREATE TABLES  **************************
 **************************************************************************/
 
+DROP TABLE IF EXISTS ItemCategory;
+GO
+
 DROP TABLE IF EXISTS Orders;
 GO
 
@@ -58,8 +60,6 @@ GO
 DROP TABLE IF EXISTS Inventory;
 GO
 
-DROP TABLE IF EXISTS ItemCategory;
-GO
 
 CREATE TABLE Customers (
     CustID varchar(4) PRIMARY KEY,
@@ -91,34 +91,31 @@ CREATE TABLE Inventory (
 	PricePerUnit smallmoney
 	);
 
+CREATE TABLE Orders (
+    OrderID int PRIMARY KEY NOT NULL,
+    Customer varchar(4) FOREIGN KEY(Customer) REFERENCES Customers(CustID) ,
+	Item varchar(10),
+   	OrderAmt smallmoney NULL,
+    OrderDate datetime2 NOT NULL
+    );
+
 CREATE TABLE LineItems(
 	LineID varchar(10) PRIMARY KEY NOT NULL,
-	OrderID int, 
+	OrderID int FOREIGN KEY(OrderID) REFERENCES Orders(OrderID), 
 	CustID varchar(4) FOREIGN KEY(CustID) REFERENCES Customers(CustID),
 	ItemSKU int FOREIGN KEY(ItemSKU) REFERENCES Inventory(ItemSKU),
 	Quantity int,
 	OrderDate datetime2 NOT NULL
 	);
 
-CREATE TABLE Orders (
-    OrderID int PRIMARY KEY NOT NULL,
-    Customer varchar(4) FOREIGN KEY(Customer) REFERENCES Customers(CustID) ,
-	Item varchar(10) FOREIGN KEY(Item) REFERENCES LineItems(LineID),
-    --Item1 int FOREIGN KEY(Item1) REFERENCES Inventory(ItemSKU),
-    --Item1Qty int,
-	--Item2 int NULL,
-	--Item2Qty int,
-	--TotQty int,
-	OrderAmt smallmoney NULL,
-    OrderDate datetime2 NOT NULL
-    );
+
 
 /*************************************************************************
 **************************** INDEXES *************************************
 **************************************************************************/
 
 
-CREATE NONCLUSTERED INDEX IX_InventoryItem ON [Inventory] (ItemSKU)
+CREATE NONCLUSTERED INDEX IX_InventoryItem ON [Orders] (OrderID)
 GO
 
 
@@ -133,7 +130,7 @@ GO
 
 CREATE OR ALTER PROCEDURE AddCategory
 	@CategoryID int,
-	@Description date
+	@Description varchar (35)
 AS
 BEGIN
 	INSERT INTO [ItemCategory] ([CategoryID], [Description])
@@ -141,28 +138,41 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE DeleteCategory
+	@CategoryID int,
+	@Description varchar (35)
+AS
+BEGIN
+	DELETE FROM ItemCategory 
+	WHERE CategoryID = @CategoryID
+END
+GO
+
 CREATE OR ALTER PROCEDURE TopCustomer
 @State_Province varchar(2)
 AS
-SELECT customer, sum(o.TotQty) AS 'TotalQuantity',
+SELECT c.CustID, sum(li.Quantity) AS 'TotalQuantity',
 	UPPER(c.State_Province) AS 'Location',
 	CONCAT(c.LastName, ',',  c.FirstName) AS 'FullName' 
-FROM Orders o 
-LEFT JOIN Customers c ON c.CustID = o.Customer
+FROM LineItems li
+LEFT JOIN Customers c ON c.CustID = li.CustID
 WHERE c.State_Province = @State_Province
-GROUP BY o.Customer, c.LastName, c.FirstName, c.State_Province;
+GROUP BY c.CustID, c.LastName, c.FirstName, c.State_Province;
 GO
 
-/*--CREATE OR ALTER PROCEDURE SalesbyCategory
---@Category varchar(255)
---AS
-SELECT sum(o.totqty) AS 'TotalQuantity', 
-	ic.Description AS 'Category',
+CREATE OR ALTER PROCEDURE SalesbyCategory
+
+AS 
+SELECT ic.Description AS 'Category',
+	sum(li.Quantity) AS 'TotalQuantity', 
 	CONCAT(c.LastName,', ', c.FirstName) AS 'FullName' 
-FROM Orders o
-LEFT JOIN Inventory i ON i.ItemSKU = o.Item1
---LEFT JOIN Customer c ON c.CustID = o.Customer
---LEFT JOIN ItemCategory ic ON ic. = sp.LevelId
-WHERE ic.Description = @Category
-GROUP BY spl.LevelName, sp.LastName, sp.FirstName;
-GO */
+FROM LineItems li
+LEFT JOIN Inventory i ON i.ItemSKU = li.ItemSKU
+LEFT JOIN Orders o ON o.Customer = li.CustID
+LEFT JOIN Customers c ON c.CustID = o.Customer
+LEFT JOIN ItemCategory ic ON ic.CategoryID = i.CategoryID
+WHERE li.Quantity > 0 
+GROUP BY ic.Description, li.Quantity, c.CustID, c.LastName, c.FirstName
+ORDER BY sum(li.Quantity) DESC;
+GO 
+
