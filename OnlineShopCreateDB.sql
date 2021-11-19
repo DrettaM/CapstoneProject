@@ -5,9 +5,10 @@
  * Description: Sales analytics for Online Shop
  *
  * Tables: 
- *			Customer (CustID, CompanyName, FirstName, LastName, Email, Addr1, Addr2, City, State_Province, PostalCode, Country, Phone) 
- *			Inventory (ItemSKU, Category, ItemDesc, UOM, PricePerUnit)
- *			Orders (OrderID, CustID, ItemSKU, Item1Qty, Item2SKU, Item2Qty, TotQty, OrderAmt, OrderDate)
+ *			Customers (CustID, CompanyName, FirstName, LastName, Email, Addr1, Addr2, City, State_Province, PostalCode, Country, Phone) 
+ *			Inventory (ItemSKU, CategoryID, ItemDesc, UOM, PricePerUnit)
+ *			ItemCategory (CategoryID, Description)
+ *			Orders (OrderID, CustID, Item1, Item1Qty, Item2, Item2Qty, TotQty, OrderAmt, OrderDate)
  *
  * Stored Procedures:
 			1. ImportData - Imports data from csv files into tables
@@ -47,14 +48,17 @@ GO
 DROP TABLE IF EXISTS Orders;
 GO
 
-DROP TABLE IF EXISTS Customer;
+DROP TABLE IF EXISTS Customers;
 GO
 
 DROP TABLE IF EXISTS Inventory;
 GO
 
-CREATE TABLE Customer (
-    CustID int PRIMARY KEY,
+DROP TABLE IF EXISTS ItemCategory;
+GO
+
+CREATE TABLE Customers (
+    CustID varchar(4) PRIMARY KEY,
 	CompanyName varchar(35) NULL,
 	FirstName varchar(35) NOT NULL,
 	LastName varchar(35) NOT NULL,
@@ -69,9 +73,14 @@ CREATE TABLE Customer (
 	DateCreated datetime2
     );
 
+CREATE TABLE ItemCategory (
+	CategoryID int PRIMARY KEY,
+	Description varchar(35)
+	);
+
 CREATE TABLE Inventory (
     ItemSKU int PRIMARY KEY,
-    Category varchar(50),
+    CategoryID int FOREIGN KEY(CategoryID) REFERENCES ItemCategory(CategoryID),
     ItemDesc varchar(255),
     OnHand int,
 	UOM varchar(25),
@@ -80,14 +89,14 @@ CREATE TABLE Inventory (
 
 CREATE TABLE Orders (
     OrderID int PRIMARY KEY NOT NULL,
-    CustID int FOREIGN KEY(CustID) REFERENCES Customer(CustID) ,
-    ItemSKU int FOREIGN KEY(ItemSKU) REFERENCES Inventory(ItemSKU),
+    Customer varchar(4) FOREIGN KEY(Customer) REFERENCES Customers(CustID) ,
+    Item1 int FOREIGN KEY(Item1) REFERENCES Inventory(ItemSKU),
     Item1Qty int,
-	Item2SKU int NULL FOREIGN KEY(Item2SKU) REFERENCES Inventory(ItemSKU),
-    Item2Qty int,
+	Item2 int NULL,
+	Item2Qty int,
 	TotQty int,
 	OrderAmt smallmoney NULL,
-    OrderDate datetime2 NOT NULL,
+    OrderDate datetime2 NOT NULL
     );
 
 /*************************************************************************
@@ -99,7 +108,7 @@ CREATE NONCLUSTERED INDEX IX_InventoryItem ON [Inventory] (ItemSKU)
 GO
 
 
-CREATE NONCLUSTERED INDEX IX_CustomerName ON [Customer] (LastName)
+CREATE NONCLUSTERED INDEX IX_CustomerName ON [Customers] (CustID)
 GO
 
 
