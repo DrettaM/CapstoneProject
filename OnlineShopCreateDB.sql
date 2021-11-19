@@ -14,7 +14,7 @@
 			1. AddCategory: @CategoryID, @Description
 			2. DeleteCategory: @CategoryID, @Description
 			3. TopCustomer: @State_Province
-			4. SalesByReport: Displays by inventory category, the number of items sold and to whom
+			4. SalesByCategory: Displays by inventory category, the number of items sold and to whom
 		
  *    
 */
